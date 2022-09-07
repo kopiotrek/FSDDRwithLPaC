@@ -1,0 +1,8 @@
+https://docs.ros.org/en/dashing/Tutorials/Parameters/Understanding-ROS2-Parameters.html#ros2-param-set
+https://www.theconstructsim.com/ros-qa-126-how-to-configure-the-differential-drive-ros-controller/
+
+# STARTING SIMULATION:
+ros2 launch articubot_one launch_sim.launch.py world:=/home/pk/dev_ws/src/articubot_one/worlds/cube.world
+
+# BUILDING PROJECT
+colcon build --symlink-install
