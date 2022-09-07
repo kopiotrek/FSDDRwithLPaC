@@ -6,3 +6,5 @@ ros2 launch articubot_one launch_sim.launch.py world:=/home/pk/dev_ws/src/articu
 
 # BUILDING PROJECT
 colcon build --symlink-install
+
+Fully Simulated Differential Drive Robot with Lidar Picking a Cube
