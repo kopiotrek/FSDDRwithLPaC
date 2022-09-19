@@ -256,7 +256,7 @@
     <joint name="gripper_right_joint" type="prismatic">
         <parent link="base_link" />
         <child link="gripper_right_link" />
-        <limit effort="1000.0" lower="0" upper="0.08" velocity="0.5" />
+        <limit effort="10000.0" lower="0" upper="0.08" velocity="5" />
         <origin xyz="0.27 -0.1 0.02" rpy="0 0 1.57" />
     </joint>
 
@@ -264,7 +264,7 @@
         <visual>
             <geometry>
                 <box size="0.02 0.15 0.02" />
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0 -0.05 0" rpy="0 0 0" />
             </geometry>
             <material name="blue" />
         </visual>
@@ -287,7 +287,7 @@
     <joint name="gripper_left_joint" type="prismatic">
         <parent link="base_link" />
         <child link="gripper_left_link" />
-        <limit effort="1000.0" lower="-0.08" upper="0" velocity="0.5" />
+        <limit effort="10000.0" lower="-0.08" upper="0" velocity="5" />
         <origin xyz="0.27 0.1 0.02" rpy="0 0 1.57" />
     </joint>
 
@@ -295,7 +295,7 @@
         <visual>
             <geometry>
                 <box size="0.02 0.15 0.02" />
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0 0.05 0" rpy="0 0 0" />
             </geometry>
             <material name="blue" />
         </visual>
@@ -320,17 +320,26 @@
         <hardware>
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </hardware>
-        <joint name="gripper_right_link">
-          <command_interface name="effort">
-            <param name="min">-1000</param>
-            <param name="max">1000</param>
-          </command_interface>
-          <state_interface name="position">
-            <param name="initial_value">1.0</param>
-          </state_interface>
-          <state_interface name="velocity"/>
-          <state_interface name="effort"/>
-        </joint>
+        <joint name="gripper_right_joint">
+            <command_interface name="position">
+              <param name="min">-1</param>
+              <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position">
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+            </state_interface>
+          </joint>
+        <joint name="gripper_left_joint">
+            <command_interface name="position">
+              <param name="min">-1</param>
+              <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position">
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+            </state_interface>
+          </joint>
       </ros2_control>
 
 </robot>
