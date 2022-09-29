@@ -11,10 +11,10 @@ controller_manager:
 joint_trajectory_controller:
   ros__parameters:
     joints:
-      - slider_to_cart
+      - gripper_right_joint
+      - gripper_left_joint
     interface_name: position
     command_interfaces:
       - position
     state_interfaces:
       - position
-      - velocity
