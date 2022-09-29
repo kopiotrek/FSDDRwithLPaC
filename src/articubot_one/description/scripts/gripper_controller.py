@@ -24,7 +24,8 @@ class SteeringActionClient(Node):
 
         # Fill in data for trajectory
         joint_names = ["gripper_left_joint",
-                        "gripper_right_joint"]
+                        "gripper_right_joint",
+                        "gripper_axis_joint"]
 
         
 
@@ -34,7 +35,7 @@ class SteeringActionClient(Node):
         if state == 1:
             point2 = JointTrajectoryPoint()
             point2.time_from_start = Duration(seconds=1, nanoseconds=0).to_msg()
-            point2.positions = [-position, position]
+            point2.positions = [-position, position, 0.1]
             
             points.append(point2)
 
@@ -50,7 +51,7 @@ class SteeringActionClient(Node):
         else:
             point2 = JointTrajectoryPoint()
             point2.time_from_start = Duration(seconds=1, nanoseconds=0).to_msg()
-            point2.positions = [0.0, 0.0]
+            point2.positions = [0.0, 0.0, 0.0]
             
             points.append(point2)
 

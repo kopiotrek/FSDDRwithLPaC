@@ -223,10 +223,11 @@
 
     <!-- GRIPPER AXIS LINK -->
 
-    <joint name="gripper_axis_joint" type="fixed">
+    <joint name="gripper_axis_joint" type="prismatic">
         <parent link="base_link" />
         <child link="gripper_axis_link" />
-        <origin xyz="0.225 0 0.02" rpy="0 0 0" />
+        <limit effort="1000.0" lower="0.02" upper="0.1" velocity="0.5" />
+        <origin xyz="0.255 0 0.02" rpy="0 -1.57 0" /> <!-- was 0.225 -->
     </joint>
 
     <link name="gripper_axis_link">
@@ -254,26 +255,26 @@
     <!-- GRIPPER RIGHT LINK -->
 
     <joint name="gripper_right_joint" type="prismatic">
-        <parent link="base_link" />
+        <parent link="gripper_axis_link" />
         <child link="gripper_right_link" />
         <limit effort="1000.0" lower="0" upper="0.08" velocity="0.5" />
-        <origin xyz="0.27 -0.1 0.02" rpy="0 0 1.57" />
+        <origin xyz="0 -0.1 -0.5" rpy="0 0 1.57" />
     </joint>
 
     <link name="gripper_right_link">
         <visual>
             <geometry>
-                <box size="0.02 0.15 0.02" />
+                <box size="0.02 0.02 0.2" />
                 <origin xyz="0 -0.05 0" rpy="0 0 0" />
             </geometry>
             <material name="blue" />
         </visual>
         <collision>
             <geometry>
-                <box size="0.02 0.15 0.02" />
+                <box size="0.02 0.02 0.2" />
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.1" x="0.02" y="0.15" z="0.02">
+        <xacro:inertial_box mass="0.1" x="0.02" y="0.02" z="0.2">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_box>
     </link>
@@ -285,27 +286,27 @@
     <!-- GRIPPER LEFT LINK -->
 
     <joint name="gripper_left_joint" type="prismatic">
-        <parent link="base_link" />
+        <parent link="gripper_axis_link" />
         <child link="gripper_left_link" />
         <limit effort="1000.0" lower="-0.08" upper="0" velocity="0.5" />
-        <origin xyz="0.27 0.1 0.02" rpy="0 0 1.57" />
+        <origin xyz="0 0.1 -0.5" rpy="0 0 1.57" />
     </joint>
 
     <link name="gripper_left_link">
         <visual>
             <geometry>
-                <box size="0.02 0.15 0.02" />
+                <box size="0.02 0.02 0.2" />
                 <origin xyz="0 0.05 0" rpy="0 0 0" />
             </geometry>
             <material name="blue" />
         </visual>
         <collision>
             <geometry>
-                <box size="0.02 0.15 0.02" />
+                <box size="0.02 0.02 0.2" />
                 <origin xyz="0 0 0" rpy="0 0 0" />
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.1" x="0.02" y="0.15" z="0.02">
+        <xacro:inertial_box mass="0.1" x="0.02" y="0.02" z="0.2">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_box>
     </link>
@@ -331,6 +332,16 @@
             </state_interface>
           </joint>
         <joint name="gripper_left_joint">
+            <command_interface name="position">
+              <param name="min">-1</param>
+              <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position">
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+            </state_interface>
+          </joint>
+        <joint name="gripper_axis_joint">
             <command_interface name="position">
               <param name="min">-1</param>
               <param name="max">1</param>
