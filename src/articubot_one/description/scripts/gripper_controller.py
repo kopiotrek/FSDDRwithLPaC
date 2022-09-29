@@ -29,15 +29,13 @@ class SteeringActionClient(Node):
         
 
         points = []
-        point1 = JointTrajectoryPoint()
-        point1.positions = [0.0, 0.0]
+        position=0.07
 
         if state == 1:
             point2 = JointTrajectoryPoint()
             point2.time_from_start = Duration(seconds=1, nanoseconds=0).to_msg()
             point2.positions = [-position, position]
-
-            points.append(point1)
+            
             points.append(point2)
 
             goal_msg.goal_time_tolerance = Duration(seconds=1, nanoseconds=0).to_msg()
@@ -54,7 +52,6 @@ class SteeringActionClient(Node):
             point2.time_from_start = Duration(seconds=1, nanoseconds=0).to_msg()
             point2.positions = [0.0, 0.0]
             
-            points.append(point1)
             points.append(point2)
 
             goal_msg.goal_time_tolerance = Duration(seconds=1, nanoseconds=0).to_msg()
@@ -94,9 +91,9 @@ def main(args=None):
 
     action_client = SteeringActionClient()
 
-    position = float(sys.argv[1])
-    #position=0.01
-    future = action_client.send_goal(position)
+    state = float(sys.argv[1])
+    #state=1
+    future = action_client.send_goal(state)
 
     rclpy.spin(action_client)
 
