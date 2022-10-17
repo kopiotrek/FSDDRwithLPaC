@@ -31,12 +31,13 @@ class SteeringActionClient(Node):
 
         points = []
         position=0.07
-
+        point1 = JointTrajectoryPoint()
+        point1.positions = [0.0, 0.0, 0.1]
         if state == 1:
             point2 = JointTrajectoryPoint()
             point2.time_from_start = Duration(seconds=1, nanoseconds=0).to_msg()
             point2.positions = [-position, position, 0.1]
-            
+            points.append(point1)
             points.append(point2)
 
             goal_msg.goal_time_tolerance = Duration(seconds=1, nanoseconds=0).to_msg()

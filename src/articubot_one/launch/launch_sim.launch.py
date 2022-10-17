@@ -7,30 +7,32 @@ from launch import LaunchDescription
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.event_handlers import OnProcessExit
+from launch.substitutions import Command, LaunchConfiguration
+import launch_ros
+import launch
 
 from launch_ros.actions import Node
 
 
-
 def generate_launch_description():
-
 
     # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
     # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
 
-    package_name='articubot_one' #<--- CHANGE ME
+    package_name = 'articubot_one'  # <--- CHANGE ME
 
     rsp = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory(package_name),'launch','rsp.launch.py'
-                )]), launch_arguments={'use_sim_time': 'true'}.items()
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory(
+                package_name), 'launch', 'rsp.launch.py'
+        )]), launch_arguments={'use_sim_time': 'true'}.items()
     )
 
     # Include the Gazebo launch file, provided by the gazebo_ros package
     gazebo = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
-             )
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
+    )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
@@ -50,16 +52,22 @@ def generate_launch_description():
         output='screen'
     )
 
+    # joint_state_publisher_gui_node = launch_ros.actions.Node(
+    #     package='joint_state_publisher_gui',
+    #     executable='joint_state_publisher_gui',
+    #     name='joint_state_publisher_gui',
+    # )
 
     # Launch them all!
     return LaunchDescription([
         RegisterEventHandler(
-          event_handler=OnProcessExit(
+            event_handler=OnProcessExit(
                 target_action=spawn_entity,
-                on_exit=[load_joint_state_controller,load_joint_trajectory_controller],
+                on_exit=[load_joint_state_controller,
+                         load_joint_trajectory_controller],
             )
         ),
-        
+
         rsp,
         gazebo,
         spawn_entity,

@@ -1,4 +1,7 @@
 <?xml version="1.0"?>
+
+<!-- Things to setup -> ctrl+f "OPTION" -->
+
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:include filename="inertial_macros.xacro" />
@@ -154,11 +157,6 @@
 
 
     <link name="lidar_link">
-        <!-- <inertial>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <mass value="0.125" />
-            <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
-        </inertial> -->
 
         <xacro:inertial_cylinder mass="0.125" length="0.055" radius="0.508">
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -187,9 +185,11 @@
 
     <gazebo reference="lidar_link">
         <sensor name="lidar" type="ray">
-            <always_on>true</always_on>
-            <visualize>true</visualize>
-            <update_rate>5</update_rate>
+            <!-- OPTIONS -->
+            <always_on>false</always_on>    
+            <visualize>false</visualize>
+            <!--  -->
+            <update_rate>1</update_rate>
             <ray>
                 <scan>
                     <horizontal>
@@ -227,7 +227,7 @@
         <parent link="base_link" />
         <child link="gripper_axis_link" />
         <limit effort="1000.0" lower="0.02" upper="0.1" velocity="0.5" />
-        <origin xyz="0.255 0 0.02" rpy="0 -1.57 0" /> <!-- was 0.225 -->
+        <origin xyz="0.225 0 0.02" rpy="0 -1.57 0" /> <!-- was 0.225 -->
     </joint>
 
     <link name="gripper_axis_link">
@@ -243,7 +243,7 @@
                 <box size="0.1 0.2 0.1" />
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.1" x="0.1" y="0.2" z="0.1">
+        <xacro:inertial_box mass="0.01" x="0.1" y="0.2" z="0.1">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_box>
     </link>
@@ -258,7 +258,7 @@
         <parent link="gripper_axis_link" />
         <child link="gripper_right_link" />
         <limit effort="1000.0" lower="0" upper="0.08" velocity="0.5" />
-        <origin xyz="0 -0.1 -0.5" rpy="0 0 1.57" />
+        <origin xyz="0 -0.1 -0.1" rpy="0 0 1.57" />
     </joint>
 
     <link name="gripper_right_link">
@@ -274,7 +274,7 @@
                 <box size="0.02 0.02 0.2" />
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.1" x="0.02" y="0.02" z="0.2">
+        <xacro:inertial_box mass="0.01" x="0.02" y="0.02" z="0.2">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_box>
     </link>
@@ -289,7 +289,7 @@
         <parent link="gripper_axis_link" />
         <child link="gripper_left_link" />
         <limit effort="1000.0" lower="-0.08" upper="0" velocity="0.5" />
-        <origin xyz="0 0.1 -0.5" rpy="0 0 1.57" />
+        <origin xyz="0 0.1 -0.1" rpy="0 0 1.57" />
     </joint>
 
     <link name="gripper_left_link">
@@ -306,7 +306,7 @@
                 <origin xyz="0 0 0" rpy="0 0 0" />
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.1" x="0.02" y="0.02" z="0.2">
+        <xacro:inertial_box mass="0.01" x="0.02" y="0.02" z="0.2">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_box>
     </link>
@@ -315,42 +315,138 @@
         <material>Gazebo/white</material>
     </gazebo>
 
-<!-- GAZEBO ROS2 CONTROL -->
+    <!-- GAZEBO ROS2 CONTROL -->
 
     <ros2_control name="GazeboSystem" type="system">
         <hardware>
-          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </hardware>
         <joint name="gripper_right_joint">
             <command_interface name="position">
-              <param name="min">-1</param>
-              <param name="max">1</param>
+                <param name="min">-1</param>
+                <param name="max">1</param>
             </command_interface>
             <state_interface name="position">
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
+                <state_interface name="velocity" />
+                <state_interface name="effort" />
             </state_interface>
-          </joint>
+        </joint>
         <joint name="gripper_left_joint">
             <command_interface name="position">
-              <param name="min">-1</param>
-              <param name="max">1</param>
+                <param name="min">-1</param>
+                <param name="max">1</param>
             </command_interface>
             <state_interface name="position">
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
+                <state_interface name="velocity" />
+                <state_interface name="effort" />
             </state_interface>
-          </joint>
+        </joint>
         <joint name="gripper_axis_joint">
             <command_interface name="position">
-              <param name="min">-1</param>
-              <param name="max">1</param>
+                <param name="min">0</param>
+                <param name="max">1</param>
             </command_interface>
             <state_interface name="position">
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
+                <state_interface name="velocity" />
+                <state_interface name="effort" />
             </state_interface>
-          </joint>
-      </ros2_control>
+        </joint>
+    </ros2_control>
+
+    <!-- IMU LINK -->
+
+    <joint name="imu_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="imu_link" />
+        <origin xyz="0 0 0.01" />
+    </joint>
+
+    <link name="imu_link">
+        <visual>
+            <geometry>
+                <box size="0.1 0.1 0.1" />
+            </geometry>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="0.1 0.1 0.1" />
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="0.1" x="0.1" y="0.1" z="0.1">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:inertial_box>
+    </link>
+
+
+    <gazebo reference="imu_link">
+        <sensor name="imu_sensor" type="imu">
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <ros>
+                    <namespace>/demo</namespace>
+                    <remapping>~/out:=imu</remapping>
+                </ros>
+                <initial_orientation_as_reference>false</initial_orientation_as_reference>
+            </plugin>
+            <always_on>true</always_on>
+            <update_rate>100</update_rate>
+            <visualize>true</visualize>
+            <imu>
+                <angular_velocity>
+                    <x>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>2e-4</stddev>
+                            <bias_mean>0.0000075</bias_mean>
+                            <bias_stddev>0.0000008</bias_stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>2e-4</stddev>
+                            <bias_mean>0.0000075</bias_mean>
+                            <bias_stddev>0.0000008</bias_stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>2e-4</stddev>
+                            <bias_mean>0.0000075</bias_mean>
+                            <bias_stddev>0.0000008</bias_stddev>
+                        </noise>
+                    </z>
+                </angular_velocity>
+                <linear_acceleration>
+                    <x>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.7e-2</stddev>
+                            <bias_mean>0.1</bias_mean>
+                            <bias_stddev>0.001</bias_stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.7e-2</stddev>
+                            <bias_mean>0.1</bias_mean>
+                            <bias_stddev>0.001</bias_stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.7e-2</stddev>
+                            <bias_mean>0.1</bias_mean>
+                            <bias_stddev>0.001</bias_stddev>
+                        </noise>
+                    </z>
+                </linear_acceleration>
+            </imu>
+        </sensor>
+    </gazebo>
 
 </robot>
